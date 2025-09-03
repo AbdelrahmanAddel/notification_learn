@@ -40,7 +40,16 @@ class LocalNotification {
       0,
       'Simple Notification',
       'This is a simple notification',
-      _simpleNotificationDetails(),
+      NotificationDetails(
+      android: AndroidNotificationDetails(
+        'channel_Id',
+        'Simple Channel',
+
+        sound: RawResourceAndroidNotificationSound(
+          'sound.wav'.split('.').first,
+        ),
+      ),
+    )
     );
   }
 
@@ -57,7 +66,14 @@ class LocalNotification {
 
   static NotificationDetails _simpleNotificationDetails() {
     return NotificationDetails(
-      android: AndroidNotificationDetails('channel_Id', 'Simple Channel'),
+      android: AndroidNotificationDetails(
+        'channel_Id',
+        'Simple Channel',
+
+        sound: RawResourceAndroidNotificationSound(
+          'sound.wav'.split('.').first,
+        ),
+      ),
     );
   }
 
