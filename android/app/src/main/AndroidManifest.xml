@@ -1,22 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- الصلاحيات الأساسية (مطلوبة دائماً) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    
-    <!-- للإشعارات المجدولة -->
+    <uses-permission android:name="android.permission.VIBRATE"/>  
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    
-    <!-- للإشعارات في الأوقات المحددة بدقة (اختر واحد فقط) -->
-    <!-- الخيار 1: يطلب إذن من المستخدم -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
-    
-    <!-- الخيار 2: لا يطلب إذن لكن قد يحتاج موافقة المتجر -->
-    <!-- <uses-permission android:name="android.permission.USE_EXACT_ALARM"/> -->
-    
-    <!-- للإشعارات على كامل الشاشة -->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
-    
-    <!-- لتجاهل وضع عدم الإزعاج -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
     <application
