@@ -5,8 +5,6 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
-// @mipmap/ic_launcher
-
 class LocalNotification {
   static FlutterLocalNotificationsPlugin localNotification =
       FlutterLocalNotificationsPlugin();
@@ -29,13 +27,20 @@ class LocalNotification {
   static Future sendScheduleNotification() async {
     tz.initializeTimeZones();
     final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+
     tz.setLocalLocation(tz.getLocation(currentTimeZone));
+    var scheduleTime = tz.TZDateTime(tz.local, 2025, 9, 4, 22, 16);
+    print(tz.TZDateTime.now(tz.local));
+    if (tz.TZDateTime.now(tz.local).isAfter(scheduleTime)) {
+      scheduleTime = scheduleTime.add(Duration(minutes: 1));
+    }
+    print(scheduleTime);
 
     await localNotification.zonedSchedule(
       3,
       'Scheduled Notification',
       'Scheduled Body',
-      tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+      scheduleTime,
       _notificationDetails(),
       androidScheduleMode: AndroidScheduleMode.alarmClock,
     );
