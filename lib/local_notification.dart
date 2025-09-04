@@ -1,4 +1,5 @@
-import 'package:flutter/rendering.dart';
+import 'dart:async';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -9,28 +10,33 @@ import 'package:timezone/data/latest.dart' as tz;
 class LocalNotification {
   static FlutterLocalNotificationsPlugin localNotification =
       FlutterLocalNotificationsPlugin();
+  static StreamController<NotificationResponse> notificationStream =
+      StreamController();
+  static onTap(NotificationResponse response) {
+    notificationStream.add(response);
+  }
 
   static Future init() async {
     await localNotification.initialize(
       InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       ),
+      onDidReceiveNotificationResponse: onTap,
+      onDidReceiveBackgroundNotificationResponse: onTap,
     );
   }
 
   static Future sendScheduleNotification() async {
     tz.initializeTimeZones();
     final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
-    debugPrint(tz.TZDateTime.now(tz.local).toString());
     tz.setLocalLocation(tz.getLocation(currentTimeZone));
-    debugPrint('After${tz.TZDateTime.now(tz.local)}');
 
     await localNotification.zonedSchedule(
       3,
       'Scheduled Notification',
       'Scheduled Body',
       tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
-      _simpleNotificationDetails(),
+      _notificationDetails(),
       androidScheduleMode: AndroidScheduleMode.alarmClock,
     );
   }
@@ -40,16 +46,7 @@ class LocalNotification {
       0,
       'Simple Notification',
       'This is a simple notification',
-      NotificationDetails(
-      android: AndroidNotificationDetails(
-        'channel_Id',
-        'Simple Channel',
-
-        sound: RawResourceAndroidNotificationSound(
-          'sound.wav'.split('.').first,
-        ),
-      ),
-    )
+      _notificationDetails(),
     );
   }
 
@@ -59,17 +56,16 @@ class LocalNotification {
       'Repeated Notification',
       'Repeated Body',
       RepeatInterval.everyMinute,
-      _simpleNotificationDetails(),
+      _notificationDetails(),
       androidScheduleMode: AndroidScheduleMode.alarmClock,
     );
   }
 
-  static NotificationDetails _simpleNotificationDetails() {
+  static NotificationDetails _notificationDetails() {
     return NotificationDetails(
       android: AndroidNotificationDetails(
         'channel_Id',
         'Simple Channel',
-
         sound: RawResourceAndroidNotificationSound(
           'sound.wav'.split('.').first,
         ),
